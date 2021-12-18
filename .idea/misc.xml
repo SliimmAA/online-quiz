@@ -3,13 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable-v24/ic_baseline_account_box_24.xml" value="0.25743589743589745" />
+        <entry key="app/src/main/res/drawable-v24/ic_baseline_grid_on_24.xml" value="0.25743589743589745" />
+        <entry key="app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.25743589743589745" />
+        <entry key="app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.140625" />
         <entry key="app/src/main/res/layout-w1240dp/activity_login.xml" value="0.1" />
+        <entry key="app/src/main/res/layout-w936dp/account_info.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/account_info.xml" value="0.20969202898550723" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_quiz_results.xml" value="0.1503623188405797" />
         <entry key="app/src/main/res/layout/activity_start_activity.xml" value="0.22509057971014493" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.165" />
         <entry key="app/src/main/res/layout/sign_in.xml" value="0.12552083333333333" />
-        <entry key="app/src/main/res/layout/toolbar.xml" value="0.21739130434782608" />
+        <entry key="app/src/main/res/layout/toolbar.xml" value="0.12447916666666667" />
+        <entry key="app/src/main/res/menu/main_menu.xml" value="0.2832522480755007" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.22037037037037038" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.22037037037037038" />
       </map>

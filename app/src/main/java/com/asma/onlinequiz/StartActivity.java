@@ -1,8 +1,16 @@
 package com.asma.onlinequiz;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -10,9 +18,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -24,41 +36,36 @@ import com.google.android.gms.tasks.Task;
 
 public class StartActivity extends AppCompatActivity {
 
+
+    private static final String TAG = StartActivity.class.getSimpleName();
+
     // selectedTopicName will be assigned by a topic name ('java', 'android', 'html', 'php')
     private String selectedTopicName = "";
 
+
+    public void logInMenuClicked(MenuItem item) {
+        final LoginFragment loginFragment = new LoginFragment();
+        loginFragment.show(getSupportFragmentManager(), "login_fragment");
+    }
+
     //private String titlename = "OnlineQuiz";
-    int RC_SIGN_IN = 0;
-    SignInButton signin;
-    GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        final View view;
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
         setContentView(R.layout.activity_start_activity);
 
-        //Toolbar toolbar = findViewById(R.id.toolbar);
-        //TextView toolbar_title = toolbar.findViewById(R.id.toolbar_title);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         //toolbar_title.setText(titlename);
 
 
-        // implenting google sign in
-        signin = findViewById(R.id.sign_in_button);
-        signin.setOnClickListener(view -> {
-            switch (view.getId()) {
-                case R.id.sign_in_button:
-                    signIn();
-                    break;
-            }
-        });
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
         // Initialize widgets from activity_splash_screen.xml
@@ -160,19 +167,17 @@ public class StartActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+
     }
 
-    private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == 40) {
             // The Task returned from this call is always completed, no need to attach
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -183,16 +188,38 @@ public class StartActivity extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
             // Signed in successfully, show authenticated UI.
-            Intent intent1 = new Intent(StartActivity.this,Login.class);
-            startActivity(intent1);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            Fragment loginDialog = fragmentManager.findFragmentByTag("login_fragment");
+            DialogFragment dialog = (DialogFragment) loginDialog;
+            dialog.dismiss();
+            updateUI(account);
+
+
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w("Error", "signInResult:failed code=" + e.getStatusCode());
+            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+            updateUI(null);
         }
     }
 
+    public void updateUI(GoogleSignInAccount account){
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+        if (acct != null) {
+            String personName = acct.getDisplayName();
+            String personGivenName = acct.getGivenName();
+            String personFamilyName = acct.getFamilyName();
+            String personEmail = acct.getEmail();
+            String personId = acct.getId();
+            Uri personPhoto = acct.getPhotoUrl();
+        }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
 }
